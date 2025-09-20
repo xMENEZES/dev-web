@@ -1,7 +1,10 @@
 package com.mycompany.webapplication.controller;
 
+import java.io.IOException;
+
 import com.mycompany.webapplication.entity.Users;
 import com.mycompany.webapplication.model.UserDAO;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,7 +12,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
 
 @WebServlet(name = "LoginVerify", urlPatterns = {"/LoginVerify"})
 public class LoginVerify extends HttpServlet {
@@ -22,7 +24,7 @@ public class LoginVerify extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
@@ -31,7 +33,7 @@ public class LoginVerify extends HttpServlet {
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
 
-        if (email == null || email.isEmpty() || senha == null || senha.isEmpty()) {
+        if (verificaCampos(email,senha)) {
             request.setAttribute("msgError", "Preencha todos os campos");
             RequestDispatcher rd = request.getRequestDispatcher("/views/login.jsp");
             rd.forward(request, response);
@@ -50,5 +52,8 @@ public class LoginVerify extends HttpServlet {
                         response.sendRedirect("Home");
                     }
         }
+    }
+    public  boolean verificaCampos(String email, String senha){
+        return email == null || email.isEmpty() || senha == null || senha.isEmpty();
     }
 }
